@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
 import { TemplateDialog } from './dialogs';
+import { t_userData } from './types';
+import { createUserData, getUserData } from './logics';
 
 
 // JSON入出力
@@ -21,7 +23,9 @@ export default function Home() {
   const [lastKey, setLastKey] = useState<string>("");
 
   useEffect(() => {
-    setLastKey(localStorage.getItem("lastmainKey") ?? "");
+    createUserData();
+    const userData = getUserData();
+    setLastKey(userData.lastMandalartKey);
   }, []);
 
   function handleNewMandalart() {

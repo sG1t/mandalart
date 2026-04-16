@@ -1,14 +1,15 @@
 
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useReducer, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useReducer, useState } from "react";
 import { useSearchParams } from 'next/navigation';
 
 import { DragDropProvider } from '@dnd-kit/react';
 import { useSortable } from "@dnd-kit/react/sortable";
-import { t_mandaraCell } from "../types";
+import { t_mandalartChart, t_mandalartDatas, t_mandaraCell, t_userData } from "../types";
 import { motion } from "framer-motion";
 import { EditCardDialog, HelpDialog, MenuDialog, TitleChangeDialog } from "./dialog";
+import { strArrToDatas, getUserData, updateChartData, updateChartTitle, createNewMandalartDatas } from "../logics";
 
 
 function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, setCurrentGoalKey: Dispatch<SetStateAction<string>>, goalKeys: string[], biggestGoalKey: string, handleOpenEditCardDialog: (key:string) => void}) {
@@ -70,7 +71,7 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
                             <svg className="w-6 h-6 fill-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M97.5 400l50-160 379.4 0-50 160-379.4 0zm190.7 48L477 448c21 0 39.6-13.6 45.8-33.7l50-160c9.7-30.9-13.4-62.3-45.8-62.3l-379.4 0c-21 0-39.6 13.6-45.8 33.7L80.2 294.4 80.2 96c0-8.8 7.2-16 16-16l138.7 0c3.5 0 6.8 1.1 9.6 3.2L282.9 112c13.8 10.4 30.7 16 48 16l117.3 0c8.8 0 16 7.2 16 16l48 0c0-35.3-28.7-64-64-64L330.9 80c-6.9 0-13.7-2.2-19.2-6.4L273.3 44.8C262.2 36.5 248.8 32 234.9 32L96.2 32c-35.3 0-64 28.7-64 64l0 288c0 35.3 28.7 64 64 64l192 0z"/></svg>
-                                                )
+                        )
                     }
                 </button>
                 <button onClick={handleEditCardBtn} aria-label="編集" className="w-10 h-10 fill-slate-600">
@@ -104,14 +105,14 @@ function Chart() {
     const [title, setTitle] = useState("");
     // 長さ81の配列で管理すると、小目標の配置換えの手間ができる。
     // 大目標、中目標のUUIDをKeyとするObjectにする
-    const [mandalartDatas, setMandalartDatas] = useState<{[key:string]: t_mandaraCell[]}>({})
+    const [mandalartCharts, setMandalartCharts] = useState<t_mandalartChart>({})
     const [startId, setStartId] = useState<string>("");
     const [targetId, setTargetId] = useState<string>("");
 
     const [biggestGoalKey, setBiggestGoalKey] = useState<string>("");
     const [currentGoalKey, setCurrentGoalKey] = useState<string>("");
 
-    const currentMandalart:t_mandaraCell[] = mandalartDatas[currentGoalKey];
+    const currentMandalart:t_mandaraCell[] = mandalartCharts[currentGoalKey];
 
     const [editCardKey, setEditCardKey] = useState<string>("");
 
@@ -122,62 +123,23 @@ function Chart() {
 
     const [isInitialized, completeInitialized] = useReducer(() => true, false);
 
-    function strArrToDatas(arr: string[], biggestUUID: string):{[key:string]:t_mandaraCell[]} {
-        const out:{[key:string]:t_mandaraCell[]} = {};
-        // 大目標のマンダラート
-        out[biggestUUID] = [];
-        for(let i = 0; i < 9; i++) {
-            out[biggestUUID].push({
-                id: crypto.randomUUID(),
-                text: arr[i],
-                color: "bg-slate-50",
-            })
-        }
-        // 中目標のマンダラート
-        for(let i = 0; i < 9; i++) {
-            if(i == 4) { continue }
-            const middleGoalKey = out[biggestUUID][i].id;
-            out[middleGoalKey] = [];
-            for(let j = 0; j < 9; j++) {
-                out[middleGoalKey].push({
-                    id: crypto.randomUUID(),
-                    text: "",
-                    color: "bg-slate-50",
-                })
-            }
-            
-            out[middleGoalKey][4].text = arr[i];
-            out[middleGoalKey][4].id = out[biggestUUID][i].id
-        }
-        return out
-    }
-
-    function addChartList(mainKey: string) {
-        const localListStr = localStorage.getItem("chartList");
-        const chartList: string[] = localListStr ? localListStr.split(",") : [];
-        if(chartList.includes(mainKey)) {
-            return;
-        }
-        chartList.push(mainKey)
-        localStorage.setItem("chartList", chartList.join(","));
-    }
-
     useEffect(() => {
         switch(mode) {
             // 前回の続きから始めるときの処理
             case "continue": {
-                const localmainKey = localStorage.getItem("lastmainKey");
-                const storageDatas = JSON.parse(localStorage.getItem(localmainKey));
-                if(storageDatas) {
-                    setTitle(storageDatas.title);
-                    setMandalartDatas(storageDatas.datas);
+                const userData:t_userData = getUserData();
+                const localmainKey: string = userData.lastMandalartKey;
+                const mandalartDatas: t_mandalartDatas = userData.mandalartDatas[localmainKey];
+                if(mandalartDatas) {
+                    setTitle(mandalartDatas.title);
+                    setMandalartCharts(mandalartDatas.mandalartChart);
                     setBiggestGoalKey(localmainKey);
                     setCurrentGoalKey(localmainKey);
                 }else {
-                    const biggestUUID = crypto.randomUUID();
-                    setBiggestGoalKey(biggestUUID);
-                    setCurrentGoalKey(biggestUUID);
-                    setMandalartDatas(strArrToDatas(new Array(9).fill(""), biggestUUID));
+                    const mainUUID = crypto.randomUUID();
+                    setBiggestGoalKey(mainUUID);
+                    setCurrentGoalKey(mainUUID);
+                    setMandalartCharts(strArrToDatas(new Array(9).fill(""), mainUUID));
                     setTitle("無題のマンダラート");
                 }
                 break;
@@ -185,35 +147,34 @@ function Chart() {
             // テンプレート名に応じてマンダラートの初期値を設定
             case "template": {
                 const templateName = searchParams.get("template");
-                const biggestUUID = crypto.randomUUID();
-                setBiggestGoalKey(biggestUUID);
-                setCurrentGoalKey(biggestUUID);
-                addChartList(biggestUUID);
+                const mainUUID = crypto.randomUUID();
+                setBiggestGoalKey(mainUUID);
+                setCurrentGoalKey(mainUUID);
 
                 switch (templateName) {
                     case "study": {
-                        setMandalartDatas(
-                            strArrToDatas(["英語", "プログラミング", "資格", "読書", "学習", "運動", "趣味", "休息", "その他", ], biggestUUID)
+                        setMandalartCharts(
+                            strArrToDatas(["英語", "プログラミング", "資格", "読書", "学習", "運動", "趣味", "休息", "その他", ], mainUUID)
                         )
                         setTitle("学習計画");
                         break;
                     }
                     case "job": {
-                        setMandalartDatas(
-                            strArrToDatas(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "スキルアップ", "ネットワーキング", "健康管理", "その他", ], biggestUUID)
+                        setMandalartCharts(
+                            strArrToDatas(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "スキルアップ", "ネットワーキング", "健康管理", "その他", ], mainUUID)
                         )
                         setTitle("転職活動");
                         break;
                     }
                     case "project": {
-                        setMandalartDatas(
-                            strArrToDatas(["企画", "設計", "開発", "テスト", "プロジェクト", "リリース", "マーケティング", "運用", "その他", ], biggestUUID)
+                        setMandalartCharts(
+                            strArrToDatas(["企画", "設計", "開発", "テスト", "プロジェクト", "リリース", "マーケティング", "運用", "その他", ], mainUUID)
                         )
                         setTitle("プロジェクト管理");
                         break;
                     }
                     default: {
-                        setMandalartDatas(strArrToDatas(new Array(9).fill(""), biggestUUID));
+                        setMandalartCharts(strArrToDatas(new Array(9).fill(""), mainUUID));
                         setTitle("無題のマンダラート");
                     }
                 }
@@ -221,12 +182,12 @@ function Chart() {
             }
             case "createNew":
             default: {
-                const biggestUUID = crypto.randomUUID();
-                setBiggestGoalKey(biggestUUID);
-                setCurrentGoalKey(biggestUUID);
-                setMandalartDatas(strArrToDatas(new Array(9).fill(""), biggestUUID));
-                setTitle("無題のマンダラート");
-                addChartList(biggestUUID);
+                const mainUUID = crypto.randomUUID();
+                const mandalartDatas = createNewMandalartDatas(mainUUID);
+                setMandalartCharts(mandalartDatas.mandalartChart);
+                setTitle(mandalartDatas.title);
+                setBiggestGoalKey(mandalartDatas.mainKey);
+                setCurrentGoalKey(mandalartDatas.mainKey);
             }
         }
         completeInitialized();
@@ -236,13 +197,15 @@ function Chart() {
         if(!isInitialized) {
             return;
         }
-        const currentDatas = {
-            "title": title,
-            "datas": mandalartDatas,
+        updateChartData(biggestGoalKey, mandalartCharts);
+    }, [mandalartCharts]);
+
+    useEffect(() => {
+        if(!isInitialized) {
+            return;
         }
-        localStorage.setItem(biggestGoalKey, JSON.stringify(currentDatas));
-        localStorage.setItem("lastmainKey", biggestGoalKey);
-    }, [mandalartDatas, title]);
+        updateChartTitle(biggestGoalKey, title);
+    }, [title]);
 
     function handleDragStart(ev:any) {
         setStartId(ev.operation.target.id);
@@ -258,7 +221,7 @@ function Chart() {
     function handleDragEnd() {
         if (!startId || !targetId) return;
 
-        setMandalartDatas((prev) => {
+        setMandalartCharts((prev) => {
             const startIdx = prev[currentGoalKey].findIndex(v => v.id == startId);
             const targetIdx = prev[currentGoalKey].findIndex(v => v.id == targetId);
             
@@ -295,7 +258,7 @@ function Chart() {
 
     return (
         <div className="h-full">
-            <EditCardDialog isEditCardDialog={isEditCardDialog} setIsEditCardDialog={setIsEditCardDialog} mandalartDatas={mandalartDatas} setMandalartDatas={setMandalartDatas} editCartKey={editCardKey}></EditCardDialog>
+            <EditCardDialog isEditCardDialog={isEditCardDialog} setIsEditCardDialog={setIsEditCardDialog} mandalartCharts={mandalartCharts} setMandalartCharts={setMandalartCharts} editCartKey={editCardKey}></EditCardDialog>
             <TitleChangeDialog isTitleDialog={isTitleDialog} setIsTitleDialog={setIsTitleDialog} title={title} setTitle={setTitle}></TitleChangeDialog>
             <MenuDialog isMenuDialog={isMenuDialog} setIsMenuDialog={setIsMenuDialog}></MenuDialog>
             <HelpDialog isHelpDialog={isHelpDialog} setIsHelpDialog={setIsHelpDialog}></HelpDialog>
@@ -330,7 +293,7 @@ function Chart() {
                 <DragDropProvider onDragStart={handleDragStart} onCollision={handleCollision} onDragEnd={handleDragEnd}>
                     <div className="w-full h-full mx-auto grid grid-cols-3 grid-rows-3 gap-3">
                         {currentMandalart && currentMandalart.map((item, idx) => (
-                            <Sortable key={item.id} item={item} idx={idx} targetId={targetId} setCurrentGoalKey={setCurrentGoalKey} goalKeys={Object.keys(mandalartDatas)} biggestGoalKey={biggestGoalKey} handleOpenEditCardDialog={handleOpenEditCardDialog}></Sortable>
+                            <Sortable key={item.id} item={item} idx={idx} targetId={targetId} setCurrentGoalKey={setCurrentGoalKey} goalKeys={Object.keys(mandalartCharts)} biggestGoalKey={biggestGoalKey} handleOpenEditCardDialog={handleOpenEditCardDialog}></Sortable>
                         ))}
                     </div>
                 </DragDropProvider>

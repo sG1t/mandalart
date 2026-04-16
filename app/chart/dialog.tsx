@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { t_mandaraCell } from "../types";
+import { t_mandalartChart, t_mandaraCell } from "../types";
 
 export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDialog: Dispatch<SetStateAction<boolean>>, title: string, setTitle: Dispatch<SetStateAction<string>>}) {
 
@@ -77,9 +77,9 @@ const colorsArr: string[] = [
     "bg-slate-50",
 ]
 
-export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardDialog: Dispatch<SetStateAction<boolean>>, mandalartDatas: {[key:string]: t_mandaraCell[]}, setMandalartDatas: Dispatch<SetStateAction<{[key:string]: t_mandaraCell[]}>>, editCartKey:string}) {
+export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardDialog: Dispatch<SetStateAction<boolean>>, mandalartCharts: t_mandalartChart, setMandalartCharts: Dispatch<SetStateAction<{[key:string]: t_mandaraCell[]}>>, editCartKey:string}) {
 
-    const {isEditCardDialog, setIsEditCardDialog, mandalartDatas, setMandalartDatas, editCartKey} = props;
+    const {isEditCardDialog, setIsEditCardDialog, mandalartCharts, setMandalartCharts, editCartKey} = props;
 
     const [currentText, setCurrentText] = useState<string>("");
     const [currentColor, setCurrentColor] = useState<string>("")
@@ -90,7 +90,7 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
         if(isEditCardDialog == false) {
             return;
         }
-        Object.values(mandalartDatas).forEach((arr) => {
+        Object.values(mandalartCharts).forEach((arr) => {
             const idx = arr.findIndex(v => v.id == editCartKey);
             if(idx != -1) {
                 setCurrentText(arr[idx].text);
@@ -113,7 +113,7 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
     }
 
     function handleDefineBtn() {
-        setMandalartDatas((prev) => {
+        setMandalartCharts((prev) => {
             const next = structuredClone(prev);
             Object.keys(prev).forEach((k) => {
                 prev[k].forEach((v, i) => {
