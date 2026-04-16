@@ -30,7 +30,7 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "pages/top/index.js"  ],
   "exclude": [
     "node_modules"
   ]
