@@ -9,7 +9,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { t_mandalartChart, t_mandalartDatas, t_mandaraCell, t_userData } from "../types";
 import { motion } from "framer-motion";
 import { EditCardDialog, HelpDialog, MenuDialog, TitleChangeDialog } from "./dialog";
-import { strArrToDatas, getUserData, updateChartData, updateChartTitle, createNewMandalartDatas } from "../logics";
+import { getUserData, updateChartData, updateChartTitle, createNewMandalartDatas, updateMandalartDatas, updateLastKey, strArrToChart } from "../logics";
 
 
 function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, setCurrentGoalKey: Dispatch<SetStateAction<string>>, goalKeys: string[], biggestGoalKey: string, handleOpenEditCardDialog: (key:string) => void}) {
@@ -128,7 +128,7 @@ function Chart() {
             // 前回の続きから始めるときの処理
             case "continue": {
                 const userData:t_userData = getUserData();
-                const localmainKey: string = userData.lastMandalartKey;
+                const localmainKey: string = searchParams.get("mainKey");
                 const mandalartDatas: t_mandalartDatas = userData.mandalartDatas[localmainKey];
                 if(mandalartDatas) {
                     setTitle(mandalartDatas.title);
@@ -139,8 +139,8 @@ function Chart() {
                     const mainUUID = crypto.randomUUID();
                     setBiggestGoalKey(mainUUID);
                     setCurrentGoalKey(mainUUID);
-                    setMandalartCharts(strArrToDatas(new Array(9).fill(""), mainUUID));
-                    setTitle("無題のマンダラート");
+                    setMandalartCharts(strArrToChart(new Array(9).fill(""), mainUUID));
+                    setTitle("");
                 }
                 break;
             }
@@ -148,46 +148,45 @@ function Chart() {
             case "template": {
                 const templateName = searchParams.get("template");
                 const mainUUID = crypto.randomUUID();
-                setBiggestGoalKey(mainUUID);
-                setCurrentGoalKey(mainUUID);
+                const mandalartDatas = createNewMandalartDatas(mainUUID, "", new Array(9).fill(""));
 
                 switch (templateName) {
                     case "study": {
-                        setMandalartCharts(
-                            strArrToDatas(["英語", "プログラミング", "資格", "読書", "学習", "運動", "趣味", "休息", "その他", ], mainUUID)
-                        )
-                        setTitle("学習計画");
+                        mandalartDatas.title = "学習計画"
+                        mandalartDatas.mandalartChart = strArrToChart(["英語", "プログラミング", "資格", "読書", "学習", "運動", "趣味", "休息", "その他", ], mandalartDatas.mainKey);
                         break;
                     }
                     case "job": {
-                        setMandalartCharts(
-                            strArrToDatas(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "スキルアップ", "ネットワーキング", "健康管理", "その他", ], mainUUID)
-                        )
-                        setTitle("転職活動");
+                        mandalartDatas.title = "転職活動"
+                        mandalartDatas.mandalartChart = strArrToChart(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "スキルアップ", "ネットワーキング", "健康管理", "その他", ], mandalartDatas.mainKey);
                         break;
                     }
                     case "project": {
-                        setMandalartCharts(
-                            strArrToDatas(["企画", "設計", "開発", "テスト", "プロジェクト", "リリース", "マーケティング", "運用", "その他", ], mainUUID)
-                        )
-                        setTitle("プロジェクト管理");
+                        mandalartDatas.title = "プロジェクト管理"
+                        mandalartDatas.mandalartChart = strArrToChart(["企画", "設計", "開発", "テスト", "プロジェクト", "リリース", "マーケティング", "運用", "その他", ], mandalartDatas.mainKey);
                         break;
                     }
                     default: {
-                        setMandalartCharts(strArrToDatas(new Array(9).fill(""), mainUUID));
-                        setTitle("無題のマンダラート");
                     }
                 }
+                setMandalartCharts(mandalartDatas.mandalartChart);
+                setTitle(mandalartDatas.title);
+                setBiggestGoalKey(mandalartDatas.mainKey);
+                setCurrentGoalKey(mandalartDatas.mainKey);
+                updateMandalartDatas(mainUUID, mandalartDatas);
+                updateLastKey(mainUUID);
                 break;
             }
             case "createNew":
             default: {
                 const mainUUID = crypto.randomUUID();
-                const mandalartDatas = createNewMandalartDatas(mainUUID);
+                const mandalartDatas = createNewMandalartDatas(mainUUID, "", new Array(9).fill(""));
                 setMandalartCharts(mandalartDatas.mandalartChart);
                 setTitle(mandalartDatas.title);
                 setBiggestGoalKey(mandalartDatas.mainKey);
                 setCurrentGoalKey(mandalartDatas.mainKey);
+                updateMandalartDatas(mainUUID, mandalartDatas);
+                updateLastKey(mainUUID);
             }
         }
         completeInitialized();
@@ -198,6 +197,7 @@ function Chart() {
             return;
         }
         updateChartData(biggestGoalKey, mandalartCharts);
+        updateLastKey(biggestGoalKey);
     }, [mandalartCharts]);
 
     useEffect(() => {
@@ -205,6 +205,7 @@ function Chart() {
             return;
         }
         updateChartTitle(biggestGoalKey, title);
+        updateLastKey(biggestGoalKey);
     }, [title]);
 
     function handleDragStart(ev:any) {
@@ -266,7 +267,7 @@ function Chart() {
                 {/* <Draggable /> */}
                 <div className="flex justify-between mb-4 md:mb-8 ">
                     <div className="flex justify-between w-fit h-fit border-b-2 border-slate-400 pl-2 ">
-                        <h2 className="w-40 md:w-60 text-xl text-center font-bold text-slate-600 ">{title}</h2>
+                        <h2 className={ `w-40 md:w-60 text-xl text-center font-bold ${title ? "text-slate-600 " : "text-slate-400 "}`}>{title || "無題のマンダラート"}</h2>
                         <button onClick={handleOpenTitleDialog} aria-label="マンダラート名変更" className="px-2 bg-slate-400 text-white rounded-r py-1.5 w-10 h-8">
                             <svg className="w-full h-full fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
@@ -276,13 +277,13 @@ function Chart() {
                     <div className="w-fit">
                         
                         
-                        <button onClick={handleHelpBtn} aria-label="ヘルプボタン" className="w-10 h-10 rounded p-2 mr-2 hover:bg-slate-300 active:brightness-90">
+                        <button onClick={handleHelpBtn} aria-label="ヘルプボタン" className="w-10 h-10 rounded p-2 mr-2 hover:bg-slate-200 active:brightness-90">
                             <svg className="w-full h-full fill-slate-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M464 256a208 208 0 1 0 -416 0 208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0 256 256 0 1 1 -512 0zm256-80c-17.7 0-32 14.3-32 32 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-44.2 35.8-80 80-80s80 35.8 80 80c0 47.2-36 67.2-56 74.5l0 3.8c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-8.1c0-20.5 14.8-35.2 30.1-40.2 6.4-2.1 13.2-5.5 18.2-10.3 4.3-4.2 7.7-10 7.7-19.6 0-17.7-14.3-32-32-32zM224 368a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
                         </button>
                         
-                        <button onClick={handleMenuBtn} aria-label="メニューボタン" className="w-10 h-10 rounded p-2 hover:bg-slate-300 active:brightness-90">
+                        <button onClick={handleMenuBtn} aria-label="メニューボタン" className="w-10 h-10 rounded p-2 hover:bg-slate-200 active:brightness-90">
                             <svg className="w-full h-full fill-slate-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg>

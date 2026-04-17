@@ -11,7 +11,7 @@ export type t_mandalartDatas = {
     mainKey: string,
     title: string,
     mandalartChart: t_mandalartChart,
-    createdData: Date,
+    createdDate: Date,
     updateDate: Date,
 }
 

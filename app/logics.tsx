@@ -22,49 +22,61 @@ export function createUserData() {
     }
 }
 
-export function strArrToDatas(arr: string[], biggestUUID: string):t_mandalartChart {
-        const out:t_mandalartChart = {};
-        // 大目標のマンダラート
-        out[biggestUUID] = [];
-        for(let i = 0; i < 9; i++) {
-            out[biggestUUID].push({
+export function strArrToChart(arr: string[], mainKey: string):t_mandalartChart {
+    const out:t_mandalartChart = {};
+    // 大目標のマンダラート
+    out[mainKey] = [];
+    for(let i = 0; i < 9; i++) {
+        out[mainKey].push({
+            id: crypto.randomUUID(),
+            text: arr[i],
+            color: "bg-slate-50",
+        })
+    }
+    // 中目標のマンダラート
+    for(let i = 0; i < 9; i++) {
+        if(i == 4) { continue }
+        const middleGoalKey = out[mainKey][i].id;
+        out[middleGoalKey] = [];
+        for(let j = 0; j < 9; j++) {
+            out[middleGoalKey].push({
                 id: crypto.randomUUID(),
-                text: arr[i],
+                text: "",
                 color: "bg-slate-50",
             })
         }
-        // 中目標のマンダラート
-        for(let i = 0; i < 9; i++) {
-            if(i == 4) { continue }
-            const middleGoalKey = out[biggestUUID][i].id;
-            out[middleGoalKey] = [];
-            for(let j = 0; j < 9; j++) {
-                out[middleGoalKey].push({
-                    id: crypto.randomUUID(),
-                    text: "",
-                    color: "bg-slate-50",
-                })
-            }
-            
-            out[middleGoalKey][4].text = arr[i];
-            out[middleGoalKey][4].id = out[biggestUUID][i].id
-        }
-        return out
+        
+        out[middleGoalKey][4].text = arr[i];
+        out[middleGoalKey][4].id = out[mainKey][i].id
     }
+    return out
+}
 
-export function createNewMandalartDatas(mainKey: string): t_mandalartDatas {
+export function createNewMandalartDatas(mainKey: string, newTitle: string, strArr: string[]): t_mandalartDatas {
     const date = new Date();
     const mandalartDatas: t_mandalartDatas = {
         mainKey: mainKey,
-        title: "無題のマンダラート",
-        mandalartChart: strArrToDatas(new Array(9).fill(""), mainKey),
-        createdData: date,
+        title: newTitle,
+        mandalartChart: strArrToChart(strArr, mainKey),
+        createdDate: date,
         updateDate: date,
     }
     return mandalartDatas
 }
 
+export function updateMandalartDatas(mainKey: string, nextMandalartDatas: t_mandalartDatas) {
+    if(!mainKey) {
+        return
+    }
+    const userData: t_userData = getUserData();
+    userData.mandalartDatas[mainKey] = nextMandalartDatas;
+    localStorage.setItem("userData", JSON.stringify(userData));
+}
+
 export function updateChartData(mainKey: string, nextChartDatas: t_mandalartChart) {
+    if(!mainKey) {
+        return
+    }
     const userData: t_userData = getUserData();
     userData.mandalartDatas[mainKey].mandalartChart = nextChartDatas;
     userData.mandalartDatas[mainKey].updateDate = new Date();
@@ -72,8 +84,20 @@ export function updateChartData(mainKey: string, nextChartDatas: t_mandalartChar
 }
 
 export function updateChartTitle(mainKey: string, nextTitle: string) {
+    if(!mainKey) {
+        return
+    }
     const userData: t_userData = getUserData()
     userData.mandalartDatas[mainKey].title = nextTitle;
     userData.mandalartDatas[mainKey].updateDate = new Date();
+    localStorage.setItem("userData", JSON.stringify(userData));
+}
+
+export function updateLastKey(mainKey: string) {
+    if(!mainKey) {
+        return
+    }
+    const userData: t_userData = getUserData();
+    userData.lastMandalartKey = mainKey;
     localStorage.setItem("userData", JSON.stringify(userData));
 }

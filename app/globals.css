@@ -10,5 +10,9 @@
 
 button,
 Link {
-    @apply cursor-pointer
+    @apply cursor-pointer hover:brightness-95 active:brightness-90
+}
+
+#simpleBar .simplebar-scrollbar:before {
+    @apply bg-indigo-500
 }

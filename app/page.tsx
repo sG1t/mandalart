@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
 import { TemplateDialog } from './dialogs';
-import { t_userData } from './types';
 import { createUserData, getUserData } from './logics';
 
 
 // JSON入出力
 // 画像出力
-// リスト
 // ログイン機能
 
 export default function Home() {
