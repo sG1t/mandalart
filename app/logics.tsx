@@ -1,24 +1,47 @@
 import { t_mandalartChart, t_mandalartDatas, t_userData } from "./types";
 
 export function getUserData(): t_userData {
-    const userDataStr = localStorage.getItem("userData");
-    const userData: t_userData = userDataStr ? JSON.parse(userDataStr): {
+    try {
+        const userDataStr = localStorage.getItem("userData");
+
+        if (!userDataStr) {
+        return {
+            mandalartDatas: {},
+            lastMandalartKey: "",
+        };
+        }
+
+        const parsed = JSON.parse(userDataStr);
+
+        // 念のため構造チェック
+        return {
+        mandalartDatas: parsed.mandalartDatas ?? {},
+        lastMandalartKey: parsed.lastMandalartKey ?? "",
+        };
+
+    } catch (e) {
+        console.error("userData parse error:", e);
+
+        return {
         mandalartDatas: {},
         lastMandalartKey: "",
-    };
-    return userData
+        };
+    }
 }
 
 export function createUserData() {
-    const userDataStr = localStorage.getItem("userData");
-    if(userDataStr) {
-        return;
-    }else {
+    try {
+        const userDataStr = localStorage.getItem("userData");
+
+        if (!userDataStr) {
         const userData: t_userData = {
             mandalartDatas: {},
             lastMandalartKey: "",
         };
         localStorage.setItem("userData", JSON.stringify(userData));
+        }
+    } catch (e) {
+        console.error("createUserData error:", e);
     }
 }
 
