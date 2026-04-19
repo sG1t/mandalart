@@ -227,9 +227,6 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
         reader.readAsText(file);
     }
 
-    function handleExportImage_3_3() {
-
-    }
 
     return(
         <>
@@ -250,7 +247,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                         </label>
 
                     </li>
-                    <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
+                    {/* <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
                         <button className="w-full" >
                             画像出力 (3 × 3)
                         </button>
@@ -259,7 +256,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                         <button className="w-full" >
                             画像出力 (9 × 9)
                         </button>
-                    </li>
+                    </li> */}
                 </menu>
 
                 <button className="absolute bottom-4 right-4 text-slate-600 font-bold px-2 rounded" onClick={handleClose}>

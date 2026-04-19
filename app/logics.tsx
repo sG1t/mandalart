@@ -1,3 +1,5 @@
+"use client"
+
 import { t_mandalartChart, t_mandalartDatas, t_userData } from "./types";
 
 export function getUserData(): t_userData {
