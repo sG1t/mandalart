@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { t_mandalartChart, t_mandaraCell } from "../types";
+import { t_mandalartChart, t_mandalartDatas, t_mandaraCell } from "../types";
+import { getUserData, updateLastKey, updateMandalartDatas } from "../logics";
 
 export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDialog: Dispatch<SetStateAction<boolean>>, title: string, setTitle: Dispatch<SetStateAction<string>>}) {
 
@@ -164,38 +165,99 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
     )
 }
 
-export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispatch<SetStateAction<boolean>>}) {
+export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispatch<SetStateAction<boolean>>, mainKey: string, setTitle: Dispatch<SetStateAction<string>>, setMandalartChart: Dispatch<SetStateAction<t_mandalartChart>>, setMainKey: Dispatch<SetStateAction<string>>, setCurrentGoalKey: Dispatch<SetStateAction<string>>}) {
 
-    const { isMenuDialog, setIsMenuDialog } = props;
+    const { isMenuDialog, setIsMenuDialog, mainKey, setTitle, setMandalartChart, setMainKey, setCurrentGoalKey } = props;
 
     function handleClose() {
         setIsMenuDialog(false);
     }
 
-    // function handleJSONExport() {
-    //     const a_elm = document.createElement("a");
-    //     a_elm.download =
-    // }
+    function handleExportJson() {
+        const userData = getUserData();
+        const mandalartData = userData.mandalartDatas[mainKey];
+        const json = JSON.stringify(mandalartData, null, 2);
+        const blob = new Blob([json], {
+            type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "mandalart.json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+    function handleImportJson(ev: React.ChangeEvent<HTMLInputElement>) {
+        const file = ev.target.files[0];
+        if(!file) {
+            return;
+        }
+        
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            try {
+                const parsed: t_mandalartDatas = JSON.parse(reader.result as string);
+                const isValidInfo = (
+                    typeof parsed.title == "string" &&
+                    typeof parsed.mainKey == "string" &&
+                    typeof parsed.createdDate == "string"&&
+                    typeof parsed.updateDate == "string" &&
+                    typeof parsed.mandalartChart == "object"
+                );                
+                if (!isValidInfo) {
+                    alert("無効なJSON構造です");
+                    return;
+                }
+                setTitle(parsed.title);
+                setMandalartChart(parsed.mandalartChart);
+                setMainKey(parsed.mainKey);
+                setCurrentGoalKey(parsed.mainKey);
+                updateMandalartDatas(parsed.mainKey, parsed);
+                updateLastKey(parsed.mainKey);
+
+                alert("JSONの読み込みに成功しました")
+                handleClose();
+            } catch {
+                alert("JSONの読み込みに失敗しました")
+            }
+        }
+        reader.readAsText(file);
+    }
+
+    function handleExportImage_3_3() {
+
+    }
 
     return(
         <>
             <div onClick={handleClose} aria-label="背景クリックで閉じる"  className={"fixed z-40 inset-0 w-dvw h-dvh bg-slate-800/50 " + (isMenuDialog ? "block" : "hidden")}></div>
             <dialog open className={ "fixed z-50 inset-0 m-auto w-80 h-96 bg-white rounded shadow-lg p-4 transition-all duration-300 " + (isMenuDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
-                <h2 className="text-lg font-bold text-center text-emerald-600 mb-10">メニュー</h2>
+                <h2 className="text-lg font-bold text-center text-emerald-600 mb-6">メニュー</h2>
                 <menu className="flex flex-col gap-4 mt-6">
                     <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
-                        <button className="w-full" >
+                        <button onClick={handleExportJson} className="w-full" >
                             JSON出力
                         </button>
                     </li>
                     <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
+                        <label>
+                            <p className="w-full">JSON入力</p>
+                            <input onChange={handleImportJson} type="file" accept=".json" className="hidden" >
+                            </input>
+                        </label>
+
+                    </li>
+                    <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
                         <button className="w-full" >
-                            JSON入力
+                            画像出力 (3 × 3)
                         </button>
                     </li>
                     <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
                         <button className="w-full" >
-                            画像出力
+                            画像出力 (9 × 9)
                         </button>
                     </li>
                 </menu>
@@ -232,10 +294,10 @@ export function HelpDialog(props: {isHelpDialog: boolean, setIsHelpDialog: Dispa
                             達成したい目標を一つ決める
                         </dd>
                         <dt className="font-bold mb-1 text-sky-600">
-                            2. 周囲に要素を広げる
+                            2. 周囲8マスに要素を広げる
                         </dt>
                         <dd className="mb-6 ml-2">
-                            必要な要素を書き出す
+                            主題に必要な要素を書き出す
                         </dd>
                         <dt className="font-bold mb-1 text-sky-600">
                             3. 

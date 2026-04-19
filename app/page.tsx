@@ -16,9 +16,14 @@ export default function Home() {
 
   const router = useRouter();
 
-  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [showTemplateDialog, setShowTemplateDialog] = useState<boolean>(false);
 
   const [lastKey, setLastKey] = useState<string>("");
+
+  function isContinueKeyExist () {
+    const userData = getUserData();
+    return Object.keys(userData.mandalartDatas).includes(userData.lastMandalartKey);
+  }
 
   useEffect(() => {
     createUserData();
@@ -83,7 +88,7 @@ export default function Home() {
             </button>
           </li>
           <li className='font-bold text-lg px-2'>
-            <button className={`px-2 text-sm ${lastKey == "" ? "text-slate-400 pointer-events-none" : ""}`} onClick={handleContinue}>
+            <button className={`px-2 text-sm ${(lastKey == "" || !isContinueKeyExist()) ? "text-slate-400 pointer-events-none" : ""}`} onClick={handleContinue}>
               前回の続き
             </button>
           </li>

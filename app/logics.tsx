@@ -101,3 +101,24 @@ export function updateLastKey(mainKey: string) {
     userData.lastMandalartKey = mainKey;
     localStorage.setItem("userData", JSON.stringify(userData));
 }
+
+export function deleteMandalartDatas(deleteMainKey: string) {
+    if(!deleteMainKey) {
+        return
+    }
+    const userData: t_userData = getUserData();
+    delete userData.mandalartDatas[deleteMainKey];
+    localStorage.setItem("userData", JSON.stringify(userData));
+}
+
+export function cntEditedCells(mandalart: t_mandalartChart): number {
+    const set = new Set();
+    Object.values(mandalart).forEach((arr) => {
+        arr.forEach((val) => {
+            if(val.text.length > 0) {
+                set.add(val.id);
+            }
+        })
+    });
+    return set.size
+}
