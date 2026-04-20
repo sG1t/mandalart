@@ -111,7 +111,7 @@ function Chart() {
     const [biggestGoalKey, setBiggestGoalKey] = useState<string>("");
     const [currentGoalKey, setCurrentGoalKey] = useState<string>("");
 
-    const currentMandalart:t_mandaraCell[] = mandalartCharts[currentGoalKey];
+    const currentMandalart: t_mandaraCell[] = mandalartCharts[currentGoalKey] ?? [];
 
     const [editCardKey, setEditCardKey] = useState<string>("");
 
