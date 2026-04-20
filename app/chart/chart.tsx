@@ -127,7 +127,7 @@ function Chart() {
             // 前回の続きから始めるときの処理
             case "continue": {
                 const userData:t_userData = getUserData();
-                const localmainKey: string = searchParams.get("mainKey");
+                const localmainKey = searchParams.get("mainKey") ?? "";
                 const mandalartDatas: t_mandalartDatas = userData.mandalartDatas[localmainKey];
                 if(mandalartDatas) {
                     setTitle(mandalartDatas.title);
