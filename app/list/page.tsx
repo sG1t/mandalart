@@ -21,7 +21,7 @@ function Sortable(props: {mandalartMainKey: string, cnt: number, title: string, 
         <motion.div
             layout
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="w-80 bg-white rouded p-4 my-4 mx-auto"
+            className="w-72 sm:w-80 bg-white rouded p-4 my-4 mx-auto rounded"
         >
             <div className="flex justify-between mb-4">
                 <Link href={`/chart?mode=continue&mainKey=${mandalartMainKey}`} className="inline-block font-bold text-sky-500 underline text-center min-w-10 max-w-54 overflow-hidden whitespace-nowrap text-ellipsis">
@@ -115,9 +115,9 @@ function List() {
                             メインメニューから新規作成しましょう
                         </p>
                     ) : (
-                        <div className="flex flex-col h-full w-96 mx-auto">
+                        <div className="flex flex-col h-full w-80 sm:w-96 mx-auto">
                             <div className="flex justify-between w-full px-2 mb-4">
-                                <input type="text" value={searchStr} onChange={handleChangeSearch} placeholder="チャートを検索" className="bg-white rounded border border-slate-600 px-1"></input>
+                                <input type="text" value={searchStr} onChange={handleChangeSearch} placeholder="チャートを検索" className="bg-white rounded border border-slate-600 px-1 w-40 sm:w-48"></input>
                                 <div>
                                     <button onClick={handleOrderBtn} className="w-24 bg-white text-center mr-2 border border-slate-600 rounded">
                                         {
