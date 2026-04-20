@@ -4,9 +4,9 @@ const nextConfig = {
   // turbopack: {
   //   root: process.cwd(),
   // },
-    basePath: "/mandalart",
-    assetPrefix: "/mandalart/",
-    output: "export",
+    // basePath: "/mandalart",
+    // assetPrefix: "/mandalart/",
+    // output: "export",
     
 };
 

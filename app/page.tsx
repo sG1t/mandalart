@@ -88,7 +88,7 @@ export default function Home() {
             </button>
           </li>
           <li className='font-bold text-lg px-2'>
-            <button className={`px-2 text-sm ${(lastKey == "" || !isContinueKeyExist()) ? "text-slate-400 pointer-events-none" : ""}`} onClick={handleContinue}>
+            <button className={`px-2 text-sm ${(lastKey == "" || !isContinueKeyExist) ? "text-slate-400 pointer-events-none" : ""}`} onClick={handleContinue}>
               前回の続き
             </button>
           </li>
