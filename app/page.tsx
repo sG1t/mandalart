@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -20,20 +19,16 @@ export default function Home() {
 
   const [lastKey, setLastKey] = useState<string>("");
 
-  function isContinueKeyExist () {
-    try {
-      const userData = getUserData();
-      return Object.keys(userData.mandalartDatas || {})
-        .includes(userData.lastMandalartKey);
-    } catch {
-      return false;
-    }
-  }
-  
+  const [isContinueKeyExist, setIsContinueKeyExist] = useState<boolean>(false);
+
   useEffect(() => {
     createUserData();
     const userData = getUserData();
     setLastKey(userData.lastMandalartKey);
+
+    const exists = Object.keys(userData.mandalartDatas || {})
+      .includes(userData.lastMandalartKey);
+    setIsContinueKeyExist(exists)
   }, []);
 
   function handleNewMandalart() {
