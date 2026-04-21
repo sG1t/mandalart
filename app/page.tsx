@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { TemplateDialog } from './dialogs';
 import { createUserData, getUserData } from './logics';
 
+import Footer from './footer';
+
 
 // JSON入出力
 // 画像出力
@@ -94,6 +96,7 @@ export default function Home() {
           </li>
         </menu>
       </div>
+      <Footer></Footer>
     </>
   );
 }
