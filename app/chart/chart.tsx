@@ -60,34 +60,34 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
                 ${targetId === item.id ? "border-slate-500 brightness-90" : "border-transparent"}
             `}
         >
-            <div className="flex justify-between px-4 w-full h-10 border-b border-slate-300">
-                <button onClick={handleDigMandalart} className={(goalTier == 1) ? "w-10 h-10" : "invisible pointer-none"}>
+            <div className="flex justify-between px-2 sm:px-4 w-full h-8 sm:h-10 border-b border-slate-300">
+                <button onClick={handleDigMandalart} className={(goalTier == 1) ? "w-8 sm:w-10 h-8 sm:h-10" : "invisible pointer-none"}>
                     {
                         isCenter ? (
-                            <svg className="w-6 h-6 fill-slate-500 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <svg className="w-4 sm:w-6 h-4 sm:h-6 fill-slate-500 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM136 232l176 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-176 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg>
                         ) : (
-                            <svg className="w-6 h-6 fill-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                            <svg className="w-4 sm:w-6 h-4 sm:h-6 fill-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M97.5 400l50-160 379.4 0-50 160-379.4 0zm190.7 48L477 448c21 0 39.6-13.6 45.8-33.7l50-160c9.7-30.9-13.4-62.3-45.8-62.3l-379.4 0c-21 0-39.6 13.6-45.8 33.7L80.2 294.4 80.2 96c0-8.8 7.2-16 16-16l138.7 0c3.5 0 6.8 1.1 9.6 3.2L282.9 112c13.8 10.4 30.7 16 48 16l117.3 0c8.8 0 16 7.2 16 16l48 0c0-35.3-28.7-64-64-64L330.9 80c-6.9 0-13.7-2.2-19.2-6.4L273.3 44.8C262.2 36.5 248.8 32 234.9 32L96.2 32c-35.3 0-64 28.7-64 64l0 288c0 35.3 28.7 64 64 64l192 0z"/></svg>
                         )
                     }
                 </button>
-                <button onClick={handleEditCardBtn} aria-label="編集" className="w-10 h-10 fill-slate-600">
-                    <svg className="w-6 h-6 ml-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                <button onClick={handleEditCardBtn} aria-label="編集" className="w-8 sm:w-10 h-8 sm:h-10 fill-slate-600">
+                    <svg className="w-4 sm:w-6 h-4 sm:h-6 ml-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                     {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                     <path d="M128.1 0c-35.3 0-64 28.7-64 64l0 384c0 35.3 28.7 64 64 64l146.2 0 10.9-54.5c4.3-21.7 15-41.6 30.6-57.2l132.2-132.2 0-97.5c0-17-6.7-33.3-18.7-45.3L322.8 18.7C310.8 6.7 294.5 0 277.6 0L128.1 0zM389.6 176l-93.5 0c-13.3 0-24-10.7-24-24l0-93.5 117.5 117.5zM332.3 466.9l-11.9 59.6c-.2 .9-.3 1.9-.3 2.9 0 8 6.5 14.6 14.6 14.6 1 0 1.9-.1 2.9-.3l59.6-11.9c12.4-2.5 23.8-8.6 32.7-17.5l118.9-118.9-80-80-118.9 118.9c-8.9 8.9-15 20.3-17.5 32.7zm267.8-123c22.1-22.1 22.1-57.9 0-80s-57.9-22.1-80 0l-28.8 28.8 80 80 28.8-28.8z"/></svg>
                 </button>
             </div>
-            <div className="grow flex justify-center items-center p-4">
+            <div className="grow flex justify-center items-center p-2 sm:p-4">
                 <p className="text-wrap text-xs sm:text-base">
                     { item.text || ""  }
                 </p>
             </div>
             {
                 !isCenter && (
-                    <svg className="absolute bottom-2 right-2 fill-slate-400 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                    <svg className="absolute bottom-2 right-2 fill-slate-400  w-3 sm:w-5  h-3 sm:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                     {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                     <path d="M128 40c0-22.1-17.9-40-40-40L40 0C17.9 0 0 17.9 0 40L0 88c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zm0 192c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zM0 424l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40zM320 40c0-22.1-17.9-40-40-40L232 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zM192 232l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40zM320 424c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48z"/></svg>
                 )

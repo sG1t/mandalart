@@ -51,8 +51,8 @@ export default function Home() {
       <TemplateDialog isOpen={showTemplateDialog} setIsOpen={setShowTemplateDialog} />
       {/* 背景マンダラ */}
       <div className='absolute inset-0 m-auto w-fit h-fit'>
-        <div className='fixed -z-10 inset-0 m-auto w-3xl aspect-square -translate-y-5 opacity-30'>
-          <div className='absolute top-0 left-0 w-full h-full grid justify-around grid-rows-3 grid-cols-3 gap-3 rotate-12 animate-[spin_360s_linear_infinite]'>
+        <div className='fixed -z-10 inset-0 m-auto w-96 sm:w-xl md:w-2xl lg:w-3xl aspect-square -translate-y-5 opacity-30'>
+          <div className='absolute top-0 left-0 w-full h-full grid justify-around grid-rows-3 grid-cols-3 gap-3 rotate-12 animate-[spin_120s_linear_infinite] md:animate-[spin_360s_linear_infinite]'>
             <div className='w-full h-full bg-linear-120 from-sky-300 to-teal-400 shadow shadow-slate-400 rounded'></div>
             <div className='w-full h-full bg-linear-120 from-teal-300 to-emerald-400 shadow shadow-slate-400 rounded'></div>
             <div className='w-full h-full bg-linear-120 from-emerald-300 to-green-400 shadow shadow-slate-400 rounded'></div>
