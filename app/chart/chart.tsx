@@ -60,7 +60,7 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
                 ${targetId === item.id ? "border-slate-500 brightness-90" : "border-transparent"}
             `}
         >
-            <div className="flex justify-between px-2 sm:px-4 w-full h-8 sm:h-10 sm:border-b border-slate-300">
+            <div className="flex justify-between px-2 sm:px-4 w-full h-8 sm:h-10 border-b border-slate-300">
                 <button onClick={handleDigMandalart} className={(goalTier == 1) ? "w-8 sm:w-10 h-8 sm:h-10" : "invisible pointer-none"}>
                     {
                         isCenter ? (

@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
         <div className="grow">
           {children}
         </div>
-        <Footer></Footer>
+        {/* <Footer></Footer> */}
       </body>
     </html>
   );
