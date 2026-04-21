@@ -60,7 +60,7 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
                 ${targetId === item.id ? "border-slate-500 brightness-90" : "border-transparent"}
             `}
         >
-            <div className="flex justify-between px-2 sm:px-4 w-full h-8 sm:h-10 border-b border-slate-300">
+            <div className="flex justify-between px-2 sm:px-4 w-full h-8 sm:h-10 sm:border-b border-slate-300">
                 <button onClick={handleDigMandalart} className={(goalTier == 1) ? "w-8 sm:w-10 h-8 sm:h-10" : "invisible pointer-none"}>
                     {
                         isCenter ? (
@@ -267,7 +267,7 @@ function Chart() {
             <div className="contentWrapper flex flex-col h-full">
                 <div className="flex justify-between mb-4 md:mb-8 ">
                     <div className="flex justify-between w-fit pl-2 ">
-                        <h2 className={ `w-36 md:w-60 h-6 sm:h-8 text-base sm:text-xl text-center font-bold overflow-hidden whitespace-nowrap text-ellipsis border-b-2 border-slate-400 ${title ? "text-slate-600 " : "text-slate-400 "}`}>{title || "無題のマンダラート"}</h2>
+                        <h2 className={ `w-44 md:w-60 h-6 sm:h-8 text-base sm:text-xl text-center font-bold overflow-hidden whitespace-nowrap text-ellipsis border-b-2 border-slate-400 ${title ? "text-slate-600 " : "text-slate-400 "}`}>{title || "無題のマンダラート"}</h2>
                         <button onClick={handleOpenTitleDialog} aria-label="マンダラート名変更" className="px-2 bg-slate-400 text-white rounded-r py-1.5 w-8 sm:w-10 h-6 sm:h-8">
                             <svg className="w-full h-full fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}

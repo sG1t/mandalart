@@ -44,7 +44,7 @@ export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDial
             <dialog open className={ "fixed z-50 inset-0 m-auto w-80 h-60 bg-white rounded shadow-lg p-4 transition-all duration-300 " + (isTitleDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
                 <h2 className="text-lg font-bold text-center text-emerald-600 mb-10">タイトルを入力</h2>
                 <input ref={titleInputRef} onChange={handleChangeInput} onKeyDown={handleKeydown} value={currentTitle} className="block w-60 px-2 mx-auto font-bold text-slate-600 text-lg text-center border-b-2 border-slate-400 focus:bg-sky-100 focus:outline-none"></input>
-                <button className="absolute bottom-12 right-4 text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
+                <button className="absolute bottom-16 right-4 text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
                     決定
                 </button>
                 <button className="absolute bottom-4 right-4 text-slate-600 font-bold px-2 rounded" onClick={handleClose}>
@@ -154,7 +154,7 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
                     }
 
                 </div>
-                <button className="absolute bottom-12 right-4 text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
+                <button className="absolute bottom-16 right-4 text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
                     決定
                 </button>
                 <button className="absolute bottom-4 right-4 text-slate-600 font-bold px-2 rounded" onClick={handleClose}>
