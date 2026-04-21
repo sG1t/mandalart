@@ -8,6 +8,7 @@ const nextConfig = {
     // assetPrefix: "/mandalart/",
     // output: "export",
     
+    allowedDevOrigins: ['192.168.11.5'],
 };
 
 export default nextConfig;

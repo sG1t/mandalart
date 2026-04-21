@@ -27,9 +27,9 @@ function Header() {
                     </h1>
                     <div className="sm:bg-[url(/img/headerBG.png)] bg-contain bg-no-repeat bg-left h-full w-full sm:w-fit sm:pl-24">
                         <nav className='relative z-20 flex justify-around sm:justify-center gap-4 items-center h-full'>
-                            <Link href="/" className={"font-bold text-white border-b-4 text-sm md:text-base px-2 transition-colors " + (currentPath === "/" ? "border-slate-300" : "border-transparent")}>Home</Link>
-                            <Link href={"/chart?mode=" + (lastKey == "" ? "createNew" : "continue&mainKey=" + lastKey)} className={"font-bold text-white border-b-4 text-sm md:text-base px-2 transition-colors " + (currentPath === "/chart" ? "border-slate-300" : "border-transparent")}>Chart</Link>
-                            <Link href="/list" className={"font-bold text-white border-b-4 text-sm md:text-base px-2 transition-colors " + (currentPath === "/list" ? "border-slate-300" : "border-transparent")}>List</Link>
+                            <Link href="/" className={"font-bold text-white border-b-2 sm:border-b-4 text-sm md:text-base px-2 transition-colors " + (currentPath === "/" ? "border-slate-300" : "border-transparent")}>Home</Link>
+                            <Link href={"/chart?mode=" + (lastKey == "" ? "createNew" : "continue&mainKey=" + lastKey)} className={"font-bold text-white border-b-2 sm:border-b-4 text-sm md:text-base px-2 transition-colors " + (currentPath === "/chart" ? "border-slate-300" : "border-transparent")}>Chart</Link>
+                            <Link href="/list" className={"font-bold text-white border-b-2 sm:border-b-4 text-sm md:text-base px-2 transition-colors " + (currentPath === "/list" ? "border-slate-300" : "border-transparent")}>List</Link>
                         </nav>
                         <div className="absolute w-dvw h-full top-0  bg-slate-600"></div>
                     </div>
