@@ -87,7 +87,7 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
             </div>
             {
                 !isCenter && (
-                    <svg className="absolute bottom-2 right-2 fill-slate-400  w-3 sm:w-5  h-3 sm:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                    <svg className="hidden sm:block absolute bottom-2 right-2 fill-slate-400  w-3 sm:w-5  h-3 sm:h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                     {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                     <path d="M128 40c0-22.1-17.9-40-40-40L40 0C17.9 0 0 17.9 0 40L0 88c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zm0 192c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zM0 424l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40zM320 40c0-22.1-17.9-40-40-40L232 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48zM192 232l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40zM320 424c0-22.1-17.9-40-40-40l-48 0c-22.1 0-40 17.9-40 40l0 48c0 22.1 17.9 40 40 40l48 0c22.1 0 40-17.9 40-40l0-48z"/></svg>
                 )
@@ -267,8 +267,8 @@ function Chart() {
             <div className="contentWrapper flex flex-col h-full">
                 <div className="flex justify-between mb-4 md:mb-8 ">
                     <div className="flex justify-between w-fit pl-2 ">
-                        <h2 className={ `w-40 md:w-60 h-6 sm:h-8 text-base sm:text-xl text-center font-bold overflow-hidden whitespace-nowrap text-ellipsis border-b-2 border-slate-400 ${title ? "text-slate-600 " : "text-slate-400 "}`}>{title || "無題のマンダラート"}</h2>
-                        <button onClick={handleOpenTitleDialog} aria-label="マンダラート名変更" className="px-2 bg-slate-400 text-white rounded-r py-1.5 w-10 h-6 sm:h-8">
+                        <h2 className={ `w-36 md:w-60 h-6 sm:h-8 text-base sm:text-xl text-center font-bold overflow-hidden whitespace-nowrap text-ellipsis border-b-2 border-slate-400 ${title ? "text-slate-600 " : "text-slate-400 "}`}>{title || "無題のマンダラート"}</h2>
+                        <button onClick={handleOpenTitleDialog} aria-label="マンダラート名変更" className="px-2 bg-slate-400 text-white rounded-r py-1.5 w-8 sm:w-10 h-6 sm:h-8">
                             <svg className="w-full h-full fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L368 46.1 465.9 144 490.3 119.6c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L432 177.9 334.1 80 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z"/></svg>
@@ -282,7 +282,7 @@ function Chart() {
                             <path d="M464 256a208 208 0 1 0 -416 0 208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0 256 256 0 1 1 -512 0zm256-80c-17.7 0-32 14.3-32 32 0 13.3-10.7 24-24 24s-24-10.7-24-24c0-44.2 35.8-80 80-80s80 35.8 80 80c0 47.2-36 67.2-56 74.5l0 3.8c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-8.1c0-20.5 14.8-35.2 30.1-40.2 6.4-2.1 13.2-5.5 18.2-10.3 4.3-4.2 7.7-10 7.7-19.6 0-17.7-14.3-32-32-32zM224 368a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
                         </button>
                         
-                        <button onClick={handleMenuBtn} aria-label="メニューボタン" className="inline-block w-6 sm:w-10 h-auto rounded sm:p-2 hover:bg-slate-200 active:brightness-90">
+                        <button onClick={handleMenuBtn} aria-label="メニューボタン" className="inline-block w-6 sm:w-10 ml-2 h-auto rounded sm:p-2 hover:bg-slate-200 active:brightness-90">
                             <svg className="w-full h-full fill-slate-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                             {/* <!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--> */}
                             <path d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"/></svg>
