@@ -1,8 +1,8 @@
 
-import Footer from "./footer";
+// import Footer from "./footer";
 import "./globals.css";
 import Header from "./header";
-
+import { Analytics } from "@vercel/analytics/next"
 
 export default function RootLayout({ children }) {
   return (
@@ -14,6 +14,7 @@ export default function RootLayout({ children }) {
         <Header></Header>
         <div className="grow">
           {children}
+          <Analytics/>
         </div>
         {/* <Footer></Footer> */}
       </body>
