@@ -122,6 +122,13 @@ function Chart() {
 
     const [isInitialized, completeInitialized] = useReducer(() => true, false);
 
+    function closeDialogBybackBtn() {
+        setIsTitleDialog(false);
+        setIsEditCardDialog(false);
+        setIsMenuDialog(false);
+        setIsHelpDialog(false);
+    }
+
     useEffect(() => {
         switch(mode) {
             // 前回の続きから始めるときの処理
@@ -192,6 +199,15 @@ function Chart() {
             }
         }
         completeInitialized();
+
+        window.addEventListener('popstate', function() {
+            closeDialogBybackBtn();
+        });
+
+        return (
+            window.removeEventListener("popstate", closeDialogBybackBtn)
+        )
+
     }, []);
     
     useEffect(() => {
@@ -243,19 +259,23 @@ function Chart() {
 
     function handleOpenTitleDialog() {
         setIsTitleDialog(true);
+        history.pushState(null, null, null);
     }
 
     function handleOpenEditCardDialog(keyString: string) {
         setEditCardKey(keyString);
         setIsEditCardDialog(true);
+        history.pushState(null, null, null);
     }
 
     function handleMenuBtn() {
         setIsMenuDialog(true);
+        history.pushState(null, null, null);
     }
 
     function handleHelpBtn() {
         setIsHelpDialog(true);
+        history.pushState(null, null, null);
     }
 
     return (
