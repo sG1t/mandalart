@@ -47,7 +47,7 @@ export function DeleteDialog(props: {deleteMainKey: string, setDeleteMainKey: Di
                     )
                 }
 
-                <p className="mt-10 mb-4">
+                <p className="mt-10 mb-6">
                     このマンダラートを削除しますか?
                 </p>
 

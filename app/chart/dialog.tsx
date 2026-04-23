@@ -41,15 +41,17 @@ export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDial
     return (
         <>
             <div onClick={handleClose} aria-label="背景クリックで閉じる" className={"fixed z-40 inset-0 w-dvw h-dvh bg-slate-800/50 " + (isTitleDialog ? "block" : "hidden")}></div>
-            <dialog open className={ "fixed z-50 inset-0 m-auto w-80 h-60 bg-white rounded shadow-lg p-4 transition-all duration-300 " + (isTitleDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
+            <dialog open className={ "fixed z-50 inset-0 m-auto w-80 h-fit bg-white rounded shadow-lg pt-4 pb-6 px-6 transition-all duration-300 " + (isTitleDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
                 <h2 className="text-lg font-bold text-center text-emerald-600 mb-10">タイトルを入力</h2>
                 <input ref={titleInputRef} onChange={handleChangeInput} onKeyDown={handleKeydown} value={currentTitle} className="block w-60 px-2 mx-auto font-bold text-slate-600 text-lg text-center border-b-2 border-slate-400 focus:bg-sky-100 focus:outline-none"></input>
-                <button className="absolute bottom-16 right-4 text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
-                    決定
-                </button>
-                <button className="absolute bottom-4 right-4 text-slate-600 font-bold px-2 rounded" onClick={handleClose}>
-                    キャンセル
-                </button>
+                <div className="flex justify-between mt-10">
+                    <button className="block text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
+                        決定
+                    </button>
+                    <button className="block text-slate-600 font-bold px-2 rounded" onClick={handleClose}>
+                        キャンセル
+                    </button>
+                </div>
             </dialog>
         </>
     )
@@ -140,10 +142,10 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
     return (
         <>
             <div onClick={handleClose} aria-label="背景クリックで閉じる" className={"fixed z-40 inset-0 w-dvw h-dvh bg-slate-800/50 " + (isEditCardDialog ? "block" : "hidden")}></div>
-            <dialog open className={ "fixed z-50 inset-0 m-auto w-80 h-96 bg-white rounded shadow-lg p-4 transition-all duration-300 " + (isEditCardDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
+            <dialog open className={ "fixed z-50 inset-0 m-auto w-72 h-fit bg-white rounded shadow-lg pt-4 pb-6 px-6 transition-all duration-300 " + (isEditCardDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
                 <h2 className="text-lg font-bold text-center text-emerald-600 mb-10">カードを編集</h2>
                 <input ref={cardNameInputRef} onChange={handleChangeInput} onKeyDown={handleKeydown} value={currentText} className="block w-60 px-2 mx-auto font-bold text-slate-600 text-lg text-center border-b-2 border-slate-400 focus:bg-sky-100 focus:outline-none mb-10"></input>
-                <div className="w-60 mx-auto flex justify-baseline flex-wrap gap-2">
+                <div className="w-60 mx-auto flex justify-between flex-wrap gap-2">
                     {
                         colorsArr.map((val, idx) => (
                             <button onClick={() => handleColorBtn(val)} aria-label={"カード色 " + val} key={idx} className={"w-8 h-8 border-neutral-400 border rounded ring-blue-400 " + (currentColor == val ? " ring " : " ") + val}>
@@ -154,12 +156,14 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
                     }
 
                 </div>
-                <button className="absolute bottom-16 right-4 text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
-                    決定
+                <div className="mt-10 flex justify-between">
+                    <button className="inline-block text-white font-bold text-lg px-8 bg-sky-500 rounded" onClick={handleDefineBtn}>
+                        決定
+                    </button>
+                    <button className="inline-block text-slate-600 font-bold px-2 rounded" onClick={handleClose}>
+                        キャンセル
                 </button>
-                <button className="absolute bottom-4 right-4 text-slate-600 font-bold px-2 rounded" onClick={handleClose}>
-                    キャンセル
-                </button>
+                </div>
             </dialog>
         </>
     )
