@@ -58,6 +58,7 @@ export function strArrToChart(arr: string[], mainKey: string):t_mandalartChart {
             color: "bg-slate-50",
         })
     }
+    out[mainKey][4].id = mainKey;
     // 中目標のマンダラート
     for(let i = 0; i < 9; i++) {
         if(i == 4) { continue }
@@ -146,4 +147,20 @@ export function cntEditedCells(mandalart: t_mandalartChart): number {
         })
     });
     return set.size
+}
+
+export function checkEmptyCardIdx(mandalart: t_mandalartChart, currentMainKey: string): number {
+    let min = 999;
+    if(mandalart[currentMainKey] == null) {
+        return min;
+    }
+    if(mandalart[currentMainKey][4].text == "") {
+        return 4;
+    }
+    Object.values(mandalart[currentMainKey]).forEach((val, idx) => {
+        if(val.text == "") {
+            min = Math.min(min, idx);
+        }
+    })
+    return min;
 }

@@ -9,14 +9,23 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { t_mandalartChart, t_mandalartDatas, t_mandaraCell, t_userData } from "../types";
 import { motion } from "framer-motion";
 import { EditCardDialog, HelpDialog, MenuDialog, TitleChangeDialog } from "./dialog";
-import { getUserData, updateChartData, updateChartTitle, createNewMandalartDatas, updateMandalartDatas, updateLastKey, strArrToChart } from "../logics";
+import { getUserData, updateChartData, updateChartTitle, createNewMandalartDatas, updateMandalartDatas, updateLastKey, strArrToChart, checkEmptyCardIdx } from "../logics";
 
 
-function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, setCurrentGoalKey: Dispatch<SetStateAction<string>>, goalKeys: string[], biggestGoalKey: string, handleOpenEditCardDialog: (key:string) => void}) {
-    const {item, idx, targetId, setCurrentGoalKey, goalKeys, biggestGoalKey, handleOpenEditCardDialog} = props;
+function Sortable(props: {item: t_mandaraCell, idx: number, targetId: string, isGuide: boolean, setCurrentGoalKey: Dispatch<SetStateAction<string>>, goalKeys: string[], biggestGoalKey: string, handleOpenEditCardDialog: (key:string) => void}) {
+    const {item, idx, targetId, isGuide, setCurrentGoalKey, goalKeys, biggestGoalKey, handleOpenEditCardDialog} = props;
     const isCenter = (idx == 4);
     
     const goalTier:number = item.id == biggestGoalKey ? 0 : goalKeys.includes(item.id) ? 1 : 2;
+
+    const cardText = item.text ?
+        item.text : isGuide ? (
+        goalTier == 0 ? "主題・目標を入力" :
+        goalTier == 1 ? "課題・アイデアを入力" :
+        goalTier == 2 ? "具体的な行動を入力" :
+        ""
+    ) : "";
+
     const {ref} = useSortable({
         id: item.id,
         index: idx,
@@ -45,6 +54,10 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
     }
     function handleEditCardBtn() {
         handleOpenEditCardDialog(item.id)
+    }
+
+    function tes() {
+        alert(123);
     }
 
     return (
@@ -81,8 +94,8 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId:string, set
                 </button>
             </div>
             <div className="grow flex justify-center items-center p-2 sm:p-4">
-                <p className="text-wrap text-xs sm:text-base">
-                    { item.text || ""  }
+                <p className={`text-wrap text-xs sm:text-base ${isGuide && "text-slate-400"}`}>
+                    { cardText }
                 </p>
             </div>
             {
@@ -121,6 +134,8 @@ function Chart() {
     const [isHelpDialog, setIsHelpDialog] = useState<boolean>(false);
 
     const [isInitialized, completeInitialized] = useReducer(() => true, false);
+
+    const guideCardIdx: number = checkEmptyCardIdx(mandalartCharts || {}, currentGoalKey);
 
     function closeDialogBybackBtn() {
         setIsTitleDialog(false);
@@ -162,17 +177,20 @@ function Chart() {
                 switch (templateName) {
                     case "study": {
                         mandalartDatas.title = "学習計画"
-                        mandalartDatas.mandalartChart = strArrToChart(["英語", "プログラミング", "資格", "読書", "学習", "運動", "趣味", "休息", "その他", ], mandalartDatas.mainKey);
+                        mandalartDatas.mandalartChart = strArrToChart(["英語", "プログラミング", "資格", "読書", "学習", "", "", "", "", ], mandalartDatas.mainKey);
+                        // mandalartDatas.mandalartChart = strArrToChart(["英語", "プログラミング", "資格", "読書", "学習", "運動", "趣味", "休息", "その他", ], mandalartDatas.mainKey);
                         break;
                     }
                     case "job": {
                         mandalartDatas.title = "転職活動"
-                        mandalartDatas.mandalartChart = strArrToChart(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "スキルアップ", "ネットワーキング", "健康管理", "その他", ], mandalartDatas.mainKey);
+                        mandalartDatas.mandalartChart = strArrToChart(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "", "", "", "", ], mandalartDatas.mainKey);
+                        // mandalartDatas.mandalartChart = strArrToChart(["企業研究", "自己分析", "履歴書・職務経歴書作成", "面接対策", "転職活動", "スキルアップ", "ネットワーキング", "健康管理", "その他", ], mandalartDatas.mainKey);
                         break;
                     }
                     case "project": {
                         mandalartDatas.title = "プロジェクト管理"
-                        mandalartDatas.mandalartChart = strArrToChart(["企画", "設計", "開発", "テスト", "プロジェクト", "リリース", "マーケティング", "運用", "その他", ], mandalartDatas.mainKey);
+                        mandalartDatas.mandalartChart = strArrToChart(["企画", "設計", "開発", "テスト", "プロジェクト", "", "", "", "", ], mandalartDatas.mainKey);
+                        // mandalartDatas.mandalartChart = strArrToChart(["企画", "設計", "開発", "テスト", "プロジェクト", "リリース", "マーケティング", "運用", "その他", ], mandalartDatas.mainKey);
                         break;
                     }
                     default: {
@@ -313,7 +331,7 @@ function Chart() {
                 <DragDropProvider onDragStart={handleDragStart} onCollision={handleCollision} onDragEnd={handleDragEnd}>
                     <div className="w-full h-full mx-auto grid grid-cols-3 grid-rows-3 gap-1 md:gap-3">
                         {currentMandalart && currentMandalart.map((item, idx) => (
-                            <Sortable key={item.id} item={item} idx={idx} targetId={targetId} setCurrentGoalKey={setCurrentGoalKey} goalKeys={Object.keys(mandalartCharts)} biggestGoalKey={biggestGoalKey} handleOpenEditCardDialog={handleOpenEditCardDialog}></Sortable>
+                            <Sortable key={item.id} item={item} idx={idx} targetId={targetId} isGuide={guideCardIdx == idx} setCurrentGoalKey={setCurrentGoalKey} goalKeys={Object.keys(mandalartCharts)} biggestGoalKey={biggestGoalKey} handleOpenEditCardDialog={handleOpenEditCardDialog}></Sortable>
                         ))}
                     </div>
                 </DragDropProvider>
