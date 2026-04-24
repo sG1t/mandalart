@@ -24,7 +24,7 @@ export function DeleteDialog(props: {deleteMainKey: string, setDeleteMainKey: Di
     return(
         <>
             <div onClick={handleClose} aria-label="背景クリックで閉じる" className={"fixed z-40 inset-0 w-dvw h-dvh bg-slate-800/50 " + (deleteMainKey != "" ? "block" : "hidden")}></div>
-            <dialog open className={ "fixed z-50 inset-0 m-auto flex flex-col w-72 h-80 bg-white rounded shadow-lg py-4 px-6 transition-all duration-300 " + (deleteMainKey != "" ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
+            <dialog open className={ "fixed z-50 inset-0 m-auto flex flex-col w-72 h-fit bg-white rounded shadow-lg pt-4 px-6 pb-6 transition-all duration-300 " + (deleteMainKey != "" ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
                 <h2 className="text-lg font-bold text-center text-emerald-600 mb-6">
                     削除確認
                 </h2>
