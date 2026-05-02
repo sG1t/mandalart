@@ -55,7 +55,7 @@ export function strArrToChart(arr: string[], mainKey: string):t_mandalartChart {
         out[mainKey].push({
             id: crypto.randomUUID(),
             text: arr[i],
-            color: "bg-slate-50",
+            color: "",
         })
     }
     out[mainKey][4].id = mainKey;
@@ -68,7 +68,7 @@ export function strArrToChart(arr: string[], mainKey: string):t_mandalartChart {
             out[middleGoalKey].push({
                 id: crypto.randomUUID(),
                 text: "",
-                color: "bg-slate-50",
+                color: "",
             })
         }
         

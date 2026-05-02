@@ -57,19 +57,33 @@ export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDial
     )
 }
 
+// const colorsArr: [string, string][] = [
+//     ["bg-red-200", "#FECACA"],
+//     ["bg-amber-200", "#FDE68A"],
+//     ["bg-lime-200", "#D9F99D"],
+//     ["bg-emerald-200", "#A7F3D0"],
+//     ["bg-cyan-200", "#A5F3FC"],
+//     ["bg-blue-200", "#BFDBFE"],
+//     ["bg-violet-200", "#DDD6FE"],
+//     ["bg-fuchsia-200", "#F5D0FE"],
+//     ["bg-rose-200", "#FECDD3"],
+//     ["bg-mauve-200", "#E7E4E7"],
+//     ["bg-slate-200", "#E2E8F0"],
+//     ["bg-slate-50", "#F8FAFC"],
+// ]
 const colorsArr: string[] = [
-    "bg-red-200",
-    "bg-amber-200",
-    "bg-lime-200",
-    "bg-emerald-200",
-    "bg-cyan-200",
-    "bg-blue-200",
-    "bg-violet-200",
-    "bg-fuchsia-200",
-    "bg-rose-200",
-    "bg-mauve-200",
-    "bg-slate-200",
-    "bg-slate-50",
+    "#FECACA",
+    "#FDE68A",
+    "#D9F99D",
+    "#A7F3D0",
+    "#A5F3FC",
+    "#BFDBFE",
+    "#DDD6FE",
+    "#F5D0FE",
+    "#FECDD3",
+    "#E7E4E7",
+    "#E2E8F0",
+    "#F8FAFC",
 ]
 
 export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardDialog: Dispatch<SetStateAction<boolean>>, mandalartCharts: t_mandalartChart, setMandalartCharts: Dispatch<SetStateAction<{[key:string]: t_mandaraCell[]}>>, editCartKey:string}) {
@@ -140,7 +154,7 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
                 <div className="w-60 mx-auto flex justify-between flex-wrap gap-2">
                     {
                         colorsArr.map((val, idx) => (
-                            <button onClick={() => handleColorBtn(val)} aria-label={"カード色 " + val} key={idx} className={"w-8 h-8 border-neutral-400 border rounded ring-blue-400 " + (currentColor == val ? " ring " : " ") + val}>
+                            <button onClick={() => handleColorBtn(val)} aria-label={"カード色 " + val} key={idx} className={"w-8 h-8 border-neutral-400 border rounded ring-blue-400 " + (currentColor == val ? " ring " : " ")} style={{backgroundColor: val}}>
 
                             </button>
 
@@ -266,11 +280,11 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
         ctx.stroke();
     }
 
-    function fillMandalartText(canvasElement: HTMLCanvasElement, mandalartSize: 3|9) {
+    function drawMandalartContent(canvasElement: HTMLCanvasElement, mandalartSize: 3|9) {
 
         const ctx = canvasElement.getContext("2d");
 
-        const topLine = outputPadding + titleSize + titleMb + textSize;
+        const topLine = outputPadding + titleSize + titleMb;
         const intervalWidth = outputCard_W + outputGap;
         const intervalHeight = outputCard_H + outputGap;
 
@@ -278,22 +292,26 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
             mandalartCharts[mainKey].forEach((val, idx) => {
                 const x = idx % 3;
                 const y = Math.floor(idx / 3);
+
+                const origin_X = outputPadding + outputGap + (intervalWidth * x);
+                const origin_Y = topLine + (intervalHeight * y) ;
+
+                ctx.fillStyle = val.color || "#F8FAFC";
+                ctx.fillRect(origin_X, origin_Y, outputCard_W, outputCard_H);
+
                 ctx.fillStyle = "#314158";
                 ctx.font = textSize + "px serif";
-
-                const origin_X = outputPadding + outputGap + (intervalWidth * x) + cardPadding;
-                const origin_Y = topLine  + (intervalHeight * y) ;
 
                 let lineHeight = 0;
                 let strLine = "";
 
                 charLoop: for(const char of val.text) {
-                    if(lineHeight + textSize > outputCard_H) {
+                    if(lineHeight + textSize > outputCard_H + cardPadding) {
                         break charLoop;
                     }
                     const strWidth = ctx.measureText(strLine + char).width + outputGap;
                     if(strWidth > outputCard_W - (cardPadding * 2)) {
-                        ctx.fillText(strLine + char, origin_X, origin_Y + lineHeight);
+                        ctx.fillText(strLine + char, origin_X + cardPadding, origin_Y + lineHeight + textSize);
                         lineHeight += textSize + textMb;
                         strLine = "";
                     }else {
@@ -301,7 +319,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                     }
                 }
                 if(strLine) {
-                    ctx.fillText(strLine, origin_X, origin_Y + lineHeight);
+                    ctx.fillText(strLine, origin_X + cardPadding, origin_Y + lineHeight + textSize);
                 }
             })
         } else if(mandalartSize == 9)  {
@@ -313,11 +331,15 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                 for(let j = 0; j < mandalartCharts[mainGoalKeys[i].id].length; j++) {
                     const child_X = j % 3;
                     const child_Y = Math.floor(j / 3);
+
+                    const origin_X = outputPadding + outputGap + (intervalWidth * child_X) + (parent_X * intervalWidth * 3);
+                    const origin_Y = topLine + (intervalHeight * child_Y) + (parent_Y * intervalHeight * 3);
+
+                    ctx.fillStyle = mandalartCharts[mainGoalKeys[i].id][j].color || "#F8FAFC";
+                    ctx.fillRect(origin_X, origin_Y, outputCard_W, outputCard_H);
+
                     ctx.fillStyle = "#314158";
                     ctx.font = textSize + "px serif";
-
-                    const origin_X = outputPadding + outputGap + (intervalWidth * child_X) + cardPadding + (parent_X * intervalWidth * 3);
-                    const origin_Y = topLine  + (intervalHeight * child_Y) + (parent_Y * intervalHeight * 3);
 
                     let lineHeight = 0;
                     let strLine = "";
@@ -328,7 +350,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                         }
                         const strWidth = ctx.measureText(strLine + char).width + outputGap;
                         if(strWidth > outputCard_W - (cardPadding * 2)) {
-                            ctx.fillText(strLine + char, origin_X, origin_Y + lineHeight);
+                            ctx.fillText(strLine + char, origin_X + cardPadding, origin_Y + lineHeight + textSize);
                             lineHeight += textSize + textMb;
                             strLine = "";
                         }else {
@@ -336,7 +358,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                         }
                     }
                     if(strLine) {
-                        ctx.fillText(strLine, origin_X, origin_Y + lineHeight);
+                        ctx.fillText(strLine, origin_X + cardPadding, origin_Y + lineHeight + textSize);
                     }
                 }
             }
@@ -346,7 +368,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
     function handleOutputImage_3x3() {
         const canvasElement:HTMLCanvasElement = document.createElement("canvas");
         createCanvasTemplate(canvasElement, 3);
-        fillMandalartText(canvasElement, 3)
+        drawMandalartContent(canvasElement, 3)
         const url = canvasElement.toDataURL();
 
         const link = document.createElement("a");
@@ -362,7 +384,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
     function handleOutputImage_9x9() {
         const canvasElement:HTMLCanvasElement = document.createElement("canvas");
         createCanvasTemplate(canvasElement, 9);
-        fillMandalartText(canvasElement, 9)
+        drawMandalartContent(canvasElement, 9)
         const url = canvasElement.toDataURL();
 
         const link = document.createElement("a");

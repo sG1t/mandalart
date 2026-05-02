@@ -64,10 +64,10 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId: string, is
             className={`
                 relative w-full h-full flex flex-col
                 rounded shadow border-2 font-bold
-                ${item.color}
                 ${isCenter ? "" : " cursor-move"}
                 ${targetId === item.id ? "border-slate-500 brightness-90" : "border-transparent"}
             `}
+            style={{backgroundColor: item.color || "#F8FAFC"}}
         >
             <div className="flex justify-between px-2 sm:px-4 w-full h-8 sm:h-10 border-b border-slate-300">
                 <button onClick={handleDigMandalart} className={(goalTier == 1) ? "w-8 sm:w-10 h-8 sm:h-10" : "invisible pointer-none"}>
