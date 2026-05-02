@@ -56,10 +56,6 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId: string, is
         handleOpenEditCardDialog(item.id)
     }
 
-    function tes() {
-        alert(123);
-    }
-
     return (
         <motion.div
             ref={ref}
@@ -94,7 +90,7 @@ function Sortable(props: {item: t_mandaraCell, idx: number, targetId: string, is
                 </button>
             </div>
             <div className="grow flex justify-center items-center p-2 sm:p-4">
-                <p className={`text-wrap text-xs sm:text-base ${isGuide && "text-slate-400"}`}>
+                <p className={`text-wrap text-xs sm:text-base line-clamp-5 md:line-clamp-4 ${isGuide && "text-slate-400"}`}>
                     { cardText }
                 </p>
             </div>
@@ -137,7 +133,7 @@ function Chart() {
 
     const guideCardIdx: number = checkEmptyCardIdx(mandalartCharts || {}, currentGoalKey);
 
-    function closeDialogBybackBtn() {
+    function closeDialogByBackBtn() {
         setIsTitleDialog(false);
         setIsEditCardDialog(false);
         setIsMenuDialog(false);
@@ -219,11 +215,11 @@ function Chart() {
         completeInitialized();
 
         window.addEventListener('popstate', function() {
-            closeDialogBybackBtn();
+            closeDialogByBackBtn();
         });
 
         return (
-            window.removeEventListener("popstate", closeDialogBybackBtn)
+            window.removeEventListener("popstate", closeDialogByBackBtn)
         )
 
     }, []);
@@ -300,7 +296,7 @@ function Chart() {
         <div className="h-full">
             <EditCardDialog isEditCardDialog={isEditCardDialog} setIsEditCardDialog={setIsEditCardDialog} mandalartCharts={mandalartCharts} setMandalartCharts={setMandalartCharts} editCartKey={editCardKey}></EditCardDialog>
             <TitleChangeDialog isTitleDialog={isTitleDialog} setIsTitleDialog={setIsTitleDialog} title={title} setTitle={setTitle}></TitleChangeDialog>
-            <MenuDialog isMenuDialog={isMenuDialog} setIsMenuDialog={setIsMenuDialog} mainKey={biggestGoalKey} setTitle={setTitle} setMandalartChart={setMandalartCharts} setMainKey={setBiggestGoalKey} setCurrentGoalKey={setCurrentGoalKey}></MenuDialog>
+            <MenuDialog isMenuDialog={isMenuDialog} setIsMenuDialog={setIsMenuDialog} mainKey={biggestGoalKey} title={title} setTitle={setTitle} mandalartCharts={mandalartCharts} setMandalartCharts={setMandalartCharts} setMainKey={setBiggestGoalKey} setCurrentGoalKey={setCurrentGoalKey}></MenuDialog>
             <HelpDialog isHelpDialog={isHelpDialog} setIsHelpDialog={setIsHelpDialog}></HelpDialog>
             <div className="contentWrapper flex flex-col h-full">
                 <div className="flex justify-between mb-4 md:mb-8 ">

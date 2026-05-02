@@ -18,7 +18,7 @@ function Header() {
 
     return (
         <>
-            <header className='relative z-40 w-full h-12 bg-slate-600 sm:bg-slate-400 bg-no-repeat justify-center mb-6 md:mb-8 overflow-hidden'>
+            <header className='relative z-40 w-full h-12 min-h-12 bg-slate-600 sm:bg-slate-400 bg-no-repeat justify-center mb-6 md:mb-8 overflow-hidden'>
                 <div className="contentWrapper sm:flex justify-between items-center h-full">                    
                     <h1 className={'hidden sm:block text-sm sm:text-base text-white font-bold transition-opacity duration-500 ' + (currentPath === "/" ? "opacity-0" : "opacity-100")}>
                         <Link href="/">

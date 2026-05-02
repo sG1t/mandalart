@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { t_mandalartChart, t_mandalartDatas, t_mandaraCell } from "../types";
+import { t_mandalartChart, t_mandalartDatas, t_mandaraCell, t_userData } from "../types";
 import { getUserData, updateLastKey, updateMandalartDatas } from "../logics";
 
 export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDialog: Dispatch<SetStateAction<boolean>>, title: string, setTitle: Dispatch<SetStateAction<string>>}) {
@@ -59,21 +59,13 @@ export function TitleChangeDialog(props: {isTitleDialog: boolean, setIsTitleDial
 
 const colorsArr: string[] = [
     "bg-red-200",
-    // "bg-orange-200",
     "bg-amber-200",
-    // "bg-yellow-200",
     "bg-lime-200",
-    // "bg-green-200",
     "bg-emerald-200",
-    // "bg-teal-200",
     "bg-cyan-200",
-    // "bg-sky-200",
     "bg-blue-200",
-    // "bg-indigo-200",
     "bg-violet-200",
-    // "bg-purple-200",
     "bg-fuchsia-200",
-    // "bg-pink-200",
     "bg-rose-200",
     "bg-mauve-200",
     "bg-slate-200",
@@ -169,9 +161,9 @@ export function EditCardDialog(props: {isEditCardDialog: boolean, setIsEditCardD
     )
 }
 
-export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispatch<SetStateAction<boolean>>, mainKey: string, setTitle: Dispatch<SetStateAction<string>>, setMandalartChart: Dispatch<SetStateAction<t_mandalartChart>>, setMainKey: Dispatch<SetStateAction<string>>, setCurrentGoalKey: Dispatch<SetStateAction<string>>}) {
+export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispatch<SetStateAction<boolean>>, mainKey: string, title:string, setTitle: Dispatch<SetStateAction<string>>, mandalartCharts: t_mandalartChart, setMandalartCharts: Dispatch<SetStateAction<t_mandalartChart>>, setMainKey: Dispatch<SetStateAction<string>>, setCurrentGoalKey: Dispatch<SetStateAction<string>>}) {
 
-    const { isMenuDialog, setIsMenuDialog, mainKey, setTitle, setMandalartChart, setMainKey, setCurrentGoalKey } = props;
+    const { isMenuDialog, setIsMenuDialog, mainKey, title, setTitle, mandalartCharts, setMandalartCharts, setMainKey, setCurrentGoalKey } = props;
 
     function handleClose() {
         setIsMenuDialog(false);
@@ -216,7 +208,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
                     return;
                 }
                 setTitle(parsed.title);
-                setMandalartChart(parsed.mandalartChart);
+                setMandalartCharts(parsed.mandalartChart);
                 setMainKey(parsed.mainKey);
                 setCurrentGoalKey(parsed.mainKey);
                 updateMandalartDatas(parsed.mainKey, parsed);
@@ -231,6 +223,157 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
         reader.readAsText(file);
     }
 
+    const outputCard_W = 128;
+    const outputCard_H = 180;
+    const outputGap = 4;
+    const outputPadding = 20;
+    const titleSize = 20;
+    const titleMb = 24;
+    const textSize = 16;
+    const cardPadding = 8;
+    const textMb = 4;
+
+    function createCanvasTemplate(canvasElement: HTMLCanvasElement, mandalartSize: number) {
+        canvasElement.width = outputCard_W * mandalartSize + outputGap * mandalartSize + outputPadding * 2;
+        canvasElement.height = titleSize + titleMb + outputCard_H * mandalartSize + outputGap * mandalartSize + outputPadding * 2;
+        const ctx = canvasElement.getContext("2d");
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+        ctx.fillStyle = "#314158";
+        ctx.font = titleSize + "px serif";
+        ctx.fillText(title, outputPadding, outputPadding+ titleSize);
+        ctx.strokeStyle = "#dddddd";
+        ctx.lineWidth = outputGap;
+        const topLine = outputPadding + titleSize + titleMb;
+        const intervalWidth = outputCard_W + outputGap;
+        const intervalHeight = outputCard_H + outputGap;
+        ctx.beginPath();
+        for(let i = 0; i <= mandalartSize; i++) {
+        ctx.moveTo(outputPadding, topLine - (ctx.lineWidth / 2) + (intervalHeight * i));
+        ctx.lineTo(canvasElement.width - outputPadding + outputGap, topLine - (ctx.lineWidth / 2) + (intervalHeight * i));
+        ctx.moveTo(outputPadding + (ctx.lineWidth / 2) + (intervalWidth * i), topLine);
+        ctx.lineTo(outputPadding + (ctx.lineWidth / 2) + (intervalWidth * i), canvasElement.height - outputPadding);
+        }
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle = "#aaaaaa";
+        for(let i = 0; i <= mandalartSize; i += 3) {
+        ctx.moveTo(outputPadding, topLine - (ctx.lineWidth / 2) + (intervalHeight * i));
+        ctx.lineTo(canvasElement.width - outputPadding + outputGap, topLine - (ctx.lineWidth / 2) + (intervalHeight * i));
+        ctx.moveTo(outputPadding + (ctx.lineWidth / 2) + (intervalWidth * i), topLine);
+        ctx.lineTo(outputPadding + (ctx.lineWidth / 2) + (intervalWidth * i), canvasElement.height - outputPadding);
+        }
+        ctx.stroke();
+    }
+
+    function fillMandalartText(canvasElement: HTMLCanvasElement, mandalartSize: 3|9) {
+
+        const ctx = canvasElement.getContext("2d");
+
+        const topLine = outputPadding + titleSize + titleMb + textSize;
+        const intervalWidth = outputCard_W + outputGap;
+        const intervalHeight = outputCard_H + outputGap;
+
+        if(mandalartSize == 3) {
+            mandalartCharts[mainKey].forEach((val, idx) => {
+                const x = idx % 3;
+                const y = Math.floor(idx / 3);
+                ctx.fillStyle = "#314158";
+                ctx.font = textSize + "px serif";
+
+                const origin_X = outputPadding + outputGap + (intervalWidth * x) + cardPadding;
+                const origin_Y = topLine  + (intervalHeight * y) ;
+
+                let lineHeight = 0;
+                let strLine = "";
+
+                charLoop: for(const char of val.text) {
+                    if(lineHeight + textSize > outputCard_H) {
+                        break charLoop;
+                    }
+                    const strWidth = ctx.measureText(strLine + char).width + outputGap;
+                    if(strWidth > outputCard_W - (cardPadding * 2)) {
+                        ctx.fillText(strLine + char, origin_X, origin_Y + lineHeight);
+                        lineHeight += textSize + textMb;
+                        strLine = "";
+                    }else {
+                        strLine += char;
+                    }
+                }
+                if(strLine) {
+                    ctx.fillText(strLine, origin_X, origin_Y + lineHeight);
+                }
+            })
+        } else if(mandalartSize == 9)  {
+            const mainGoalKeys = Object.values(mandalartCharts[mainKey]);
+
+            for(let i = 0; i < mainGoalKeys.length; i++) {
+                const parent_X = i % 3;
+                const parent_Y = Math.floor(i / 3);
+                for(let j = 0; j < mandalartCharts[mainGoalKeys[i].id].length; j++) {
+                    const child_X = j % 3;
+                    const child_Y = Math.floor(j / 3);
+                    ctx.fillStyle = "#314158";
+                    ctx.font = textSize + "px serif";
+
+                    const origin_X = outputPadding + outputGap + (intervalWidth * child_X) + cardPadding + (parent_X * intervalWidth * 3);
+                    const origin_Y = topLine  + (intervalHeight * child_Y) + (parent_Y * intervalHeight * 3);
+
+                    let lineHeight = 0;
+                    let strLine = "";
+
+                    charLoop: for(const char of mandalartCharts[mainGoalKeys[i].id][j].text) {
+                        if(lineHeight + textSize > outputCard_H) {
+                            break charLoop;
+                        }
+                        const strWidth = ctx.measureText(strLine + char).width + outputGap;
+                        if(strWidth > outputCard_W - (cardPadding * 2)) {
+                            ctx.fillText(strLine + char, origin_X, origin_Y + lineHeight);
+                            lineHeight += textSize + textMb;
+                            strLine = "";
+                        }else {
+                            strLine += char;
+                        }
+                    }
+                    if(strLine) {
+                        ctx.fillText(strLine, origin_X, origin_Y + lineHeight);
+                    }
+                }
+            }
+        }  
+    }
+
+    function handleOutputImage_3x3() {
+        const canvasElement:HTMLCanvasElement = document.createElement("canvas");
+        createCanvasTemplate(canvasElement, 3);
+        fillMandalartText(canvasElement, 3)
+        const url = canvasElement.toDataURL();
+
+        const link = document.createElement("a");
+        link.download = title + "_3x3.png";
+        link.type = "png";
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    function handleOutputImage_9x9() {
+        const canvasElement:HTMLCanvasElement = document.createElement("canvas");
+        createCanvasTemplate(canvasElement, 9);
+        fillMandalartText(canvasElement, 9)
+        const url = canvasElement.toDataURL();
+
+        const link = document.createElement("a");
+        link.download = title + "_9x9.png";
+        link.type = "png";
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
 
     return(
         <>
@@ -238,29 +381,29 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
             <dialog open className={ "fixed z-50 inset-0 m-auto w-80 h-96 bg-white rounded shadow-lg p-4 transition-all duration-300 " + (isMenuDialog ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none")}>
                 <h2 className="text-lg font-bold text-center text-emerald-600 mb-6">メニュー</h2>
                 <menu className="flex flex-col gap-4 mt-6">
-                    <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
-                        <button onClick={handleExportJson} className="w-full" >
+                    <li className="bg-slate-200 rounded text-center cursor-pointer hover:bg-slate-300 transition-colors">
+                        <button onClick={handleExportJson} className="w-full p-2" >
                             JSON出力
                         </button>
                     </li>
-                    <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
+                    <li className="bg-slate-200 rounded text-center cursor-pointer hover:bg-slate-300 transition-colors">
                         <label>
-                            <p className="w-full">JSON入力</p>
+                            <p className="w-full p-2">JSON入力</p>
                             <input onChange={handleImportJson} type="file" accept=".json" className="hidden" >
                             </input>
                         </label>
 
                     </li>
-                    {/* <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
-                        <button className="w-full" >
-                            画像出力 (3 × 3)
+                    <li className="bg-slate-200 rounded text-center cursor-pointer hover:bg-slate-300 transition-colors">
+                        <button onClick={handleOutputImage_3x3} className="w-full p-2" >
+                            画像出力 (3×3)
                         </button>
                     </li>
-                    <li className="bg-slate-200 rounded p-2 text-center cursor-pointer hover:bg-slate-300 transition-colors">
-                        <button className="w-full" >
-                            画像出力 (9 × 9)
+                    <li className="bg-slate-200 rounded text-center cursor-pointer hover:bg-slate-300 transition-colors">
+                        <button onClick={handleOutputImage_9x9} className="w-full p-2" >
+                            画像出力 (9×9)
                         </button>
-                    </li> */}
+                    </li>
                 </menu>
 
                 <button className="absolute bottom-4 right-4 text-slate-600 font-bold px-2 rounded" onClick={handleClose}>

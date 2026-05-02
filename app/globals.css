@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-    @apply text-slate-700 fill-slate-700 min-h-dvh overflow-hidden bg-linear-180 from-slate-100 to-slate-300;
+    @apply text-slate-700 fill-slate-700 min-h-dvh bg-linear-180 from-slate-100 to-slate-300;
 }
 
 .contentWrapper {
