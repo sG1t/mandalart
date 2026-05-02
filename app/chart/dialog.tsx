@@ -241,7 +241,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
         ctx.fillRect(0, 0, canvasElement.width, canvasElement.height);
         ctx.fillStyle = "#314158";
         ctx.font = titleSize + "px serif";
-        ctx.fillText(title, outputPadding, outputPadding+ titleSize);
+        ctx.fillText(title ? title : "無題のマンダラート", outputPadding, outputPadding+ titleSize);
         ctx.strokeStyle = "#dddddd";
         ctx.lineWidth = outputGap;
         const topLine = outputPadding + titleSize + titleMb;
@@ -350,7 +350,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
         const url = canvasElement.toDataURL();
 
         const link = document.createElement("a");
-        link.download = title + "_3x3.png";
+        link.download = (title ? title : "無題のマンダラート") + "_3x3.png";
         link.type = "png";
         link.href = url;
         document.body.appendChild(link);
@@ -366,7 +366,7 @@ export function MenuDialog(props: {isMenuDialog: boolean, setIsMenuDialog: Dispa
         const url = canvasElement.toDataURL();
 
         const link = document.createElement("a");
-        link.download = title + "_9x9.png";
+        link.download = (title ? title : "無題のマンダラート") + "_9x9.png";
         link.type = "png";
         link.href = url;
         document.body.appendChild(link);
